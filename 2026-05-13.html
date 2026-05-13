@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="300">
+<title>Magpie — 2026-05-13</title>
+<style>
+  :root {
+    --bg: #faf7f0;
+    --card: #ffffff;
+    --card-hi: #f4f0e6;
+    --text: #1a1d24;
+    --muted: #6b7280;
+    --border: #d4ccb8;
+    --accent: #2d3748;
+    --accent-dark: #1a1d24;
+    --win: #15803d;
+    --place: #1d4ed8;
+    --warn: #b45309;
+    --shortlist: #b45309;
+    --shortlist-bg: #fef3c7;
+    --shortlist-border: #d97706;
+
+    --chip-pos-bg: #d1fae5;
+    --chip-pos-fg: #065f46;
+    --chip-pos-bd: #6ee7b7;
+    --chip-up-bg: #ede9fe;
+    --chip-up-fg: #5b21b6;
+    --chip-up-bd: #c4b5fd;
+    --chip-info-bg: #dbeafe;
+    --chip-info-fg: #1e40af;
+    --chip-info-bd: #93c5fd;
+    --chip-warn-bg: #fee2e2;
+    --chip-warn-fg: #991b1b;
+    --chip-warn-bd: #fca5a5;
+    --chip-amber-bg: #fed7aa;
+    --chip-amber-fg: #9a3412;
+    --chip-amber-bd: #fdba74;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  header {
+    background: #ffffff;
+    padding: 20px 20px 14px;
+    border-bottom: 3px solid var(--accent);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+  header .date {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+  header .stats {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  header .stats strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .tab {
+    flex: 1;
+    padding: 14px 18px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .tab.active {
+    color: #ffffff;
+    background: var(--shortlist);
+    border-color: var(--shortlist);
+    box-shadow: 0 2px 6px rgba(180, 83, 9, 0.25);
+  }
+  .tab .count {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 9px;
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--shortlist);
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .tab:not(.active) .count {
+    background: var(--border);
+    color: var(--accent);
+  }
+
+  .container {
+    padding: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Race card */
+  .race {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .race.shortlisted {
+    border: 1.5px solid var(--shortlist-border);
+    box-shadow: 0 1px 6px rgba(217,119,6,0.15);
+  }
+  .race-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 10px;
+  }
+  .race-title {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 15px;
+  }
+  .race-title .time {
+    color: var(--shortlist);
+    margin-right: 8px;
+  }
+  .race-info {
+    color: var(--muted);
+    font-size: 12px;
+    text-align: right;
+  }
+
+  /* Runner */
+  .runner {
+    padding: 10px 0;
+  }
+  .runner + .runner {
+    border-top: 1px dashed var(--border);
+  }
+  .runner-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .runner-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .runner-name .draw {
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 12px;
+    margin-left: 4px;
+  }
+  .runner.shortlisted .runner-name {
+    color: var(--shortlist);
+  }
+  .runner-odds {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .runner-odds.in-band { color: var(--shortlist); }
+  .runner-odds.win { color: var(--win); }
+  .runner-meta {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 3px;
+  }
+  .runner-meta-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+    flex-wrap: wrap;
+  }
+  .runner-meta-line .meta-stats {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.01em;
+  }
+  .runner-meta .profile {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-right: 6px;
+    text-transform: uppercase;
+  }
+  .runner-meta .profile.WIN { background: #d1fae5; color: var(--win); }
+  .runner-meta .profile.PLACE { background: #dbeafe; color: var(--place); }
+  .runner-meta .profile.NOBET { background: var(--border); color: var(--muted); }
+  .runner.shortlisted .runner-name::before {
+    content: '★';
+    color: var(--shortlist);
+    margin-right: 6px;
+  }
+
+  /* Live indicator */
+  .live-indicator {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .live-indicator .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--win);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  .live-indicator .separator {
+    opacity: 0.5;
+  }
+  .live-indicator .refresh-link {
+    color: var(--shortlist);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .live-indicator .refresh-link:hover {
+    text-decoration: underline;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Chip flags - soft pastel pills */
+  .chips {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .chip.positive { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+  .chip.upside   { background: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; }
+  .chip.info     { background: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
+  .chip.warning  { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+  .chip.amber    { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+
+  /* Footer */
+  .footer {
+    margin: 32px 0 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 11px;
+    text-align: center;
+  }
+  .footer code {
+    background: #fef3c7;
+    color: var(--shortlist);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1><span style="opacity:0.9">▲</span> Magpie</h1>
+  <div class="date">Wednesday, 13 May 2026</div>
+  <div class="stats">
+    <strong>7</strong> staking picks · <strong>41</strong> races today · Backtest <code>+74% ROI</code>
+  </div>
+  <div class="live-indicator">
+    <span class="dot"></span>
+    <span>Updated 11:55, 13 May</span>
+    <span class="separator">·</span>
+    <span>Auto-refreshes every 5 min</span>
+    <span class="separator">·</span>
+    <a href="javascript:location.reload()" class="refresh-link">↻ Refresh now</a>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab tab-picks active" onclick="show('picks')">
+    Picks <span class="count">7</span>
+  </div>
+  <div class="tab tab-all" onclick="show('all')">
+    All Races <span class="count">41</span>
+  </div>
+</div>
+
+<div class="container">
+  <div id="panel-picks" class="panel active">
+    
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">14:55</span>York</div>
+        <div class="race-info">£31k - Good - 6f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Fast Track Harry<span class="draw">(16)</span></div>
+            <div class="runner-odds">15.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 64.0 · Avg3 76 · Grd↑ 75 · Stal 13% · 17d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_STRONG</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_STRONG</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Fahrenheit Seven<span class="draw">(15)</span></div>
+            <div class="runner-odds">11.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 63.0 · Avg3 80 · Grd↑ 78 · Stal 10% · 15d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_OK</span></div>
+        </div>
+    </div>
+    <div class="race shortlisted">
+      <div class="race-header">
+        <div class="race-title"><span class="time">15:30</span>York</div>
+        <div class="race-info">£94k - Good - 6f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Kind Of Blue<span class="draw">(2)</span></div>
+            <div class="runner-odds">7.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 65.0 · Avg3 82 · Grd↑ 85 · Stal 14% · 206d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip info">LAST_2</span></div>
+        </div>
+        <div class="runner shortlisted">
+          <div class="runner-head">
+            <div class="runner-name">Aramram<span class="draw">(7)</span></div>
+            <div class="runner-odds in-band">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 59.0 · Avg3 79 · Grd↑ 81 · Stal 14% · 26d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_OK</span><span class="chip positive">GRD_UP_STRONG</span><span class="chip positive">DST_UP_STRONG</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_ELITE</span></div>
+        </div>
+    </div>
+    <div class="race shortlisted">
+      <div class="race-header">
+        <div class="race-title"><span class="time">16:40</span>York</div>
+        <div class="race-info">£15k - Good - 7f</div>
+      </div>
+      
+        <div class="runner shortlisted">
+          <div class="runner-head">
+            <div class="runner-name">The Resdev Scholar<span class="draw">(6)</span></div>
+            <div class="runner-odds in-band">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 78.0 · Avg3 71 · Grd↑ 75 · Stal 12% · 8d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_ELITE</span><span class="chip info">LAST_3</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">First Legion<span class="draw">(7)</span></div>
+            <div class="runner-odds">11.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 64.0 · Avg3 72 · Grd↑ 75 · Stal 12% · 10d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_OK</span><span class="chip info">LAST_5</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">17:15</span>York</div>
+        <div class="race-info">£15k - Good - 1m4f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Great Bedwyn<span class="draw">(7)</span></div>
+            <div class="runner-odds">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 51.0 · Avg3 74 · Grd↑ 74 · Stal 10% · 39d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_OK</span><span class="chip positive">DST_UP_STRONG</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_OK</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Galyx<span class="draw">(9)</span></div>
+            <div class="runner-odds">8.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 48.0 · Avg3 72 · Grd↑ 77 · Stal 13% · 321d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_OK</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span></div>
+        </div>
+    </div>
+    <div class="race shortlisted">
+      <div class="race-header">
+        <div class="race-title"><span class="time">18:00</span>Newton Abbot</div>
+        <div class="race-info">£4k - Good - 2m2½f - Hurd</div>
+      </div>
+      
+        <div class="runner shortlisted">
+          <div class="runner-head">
+            <div class="runner-name">Blackwater Lilly<span class="draw">(100)</span></div>
+            <div class="runner-odds in-band">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 76.0 · Avg3 57 · Grd↑ 63 · Stal —% · 32d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip info">PROGRESSIVE_FORM</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Reel Orange<span class="draw">(90)</span></div>
+            <div class="runner-odds">15.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 33.0 · Avg3 54 · Grd↑ 64 · Stal —% · 6d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_STRONG</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+    </div>
+    <div class="race shortlisted">
+      <div class="race-header">
+        <div class="race-title"><span class="time">18:20</span>Punchestown</div>
+        <div class="race-info">£5k - Good - 2m - Hurd</div>
+      </div>
+      
+        <div class="runner shortlisted">
+          <div class="runner-head">
+            <div class="runner-name">Walk On Annilog<span class="draw">(97)</span></div>
+            <div class="runner-odds in-band">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 66.0 · Avg3 51 · Grd↑ 59 · Stal —% · 36d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Ode To Joy<span class="draw">(85)</span></div>
+            <div class="runner-odds">7.5</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 65.0 · Avg3 54 · Grd↑ 56 · Stal —% · 24d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip info">LAST_3</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip info">DAYS_SWEET</span></div>
+        </div>
+    </div>
+    <div class="race shortlisted">
+      <div class="race-header">
+        <div class="race-title"><span class="time">19:20</span>Punchestown</div>
+        <div class="race-info">£5k - Good - 3m - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Cullig<span class="draw">(100)</span></div>
+            <div class="runner-odds">5.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 54.0 · Avg3 55 · Grd↑ 62 · Stal —% · 28d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_5</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+        <div class="runner shortlisted">
+          <div class="runner-head">
+            <div class="runner-name">Wakey Wakey Man<span class="draw">(89)</span></div>
+            <div class="runner-odds in-band">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 52.0 · Avg3 49 · Grd↑ 61 · Stal —% · 28d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_STRONG</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_STRONG</span><span class="chip info">LAST_3</span><span class="chip info">IMPROVING_LAST</span><span class="chip info">PROGRESSIVE_FORM</span></div>
+        </div>
+    </div>
+  </div>
+  <div id="panel-all" class="panel">
+    
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">13:45</span>York</div>
+        <div class="race-info">£21k - Good - 5f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Spectacular Diver<span class="draw">(2)</span></div>
+            <div class="runner-odds">6.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 64.0 · Avg3 — · Grd↑ 39 · Stal 10% · 13d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_ELITE</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">14:00</span>Perth</div>
+        <div class="race-info">£5k - Good - 2m4½f - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Kaydence<span class="draw">(0)</span></div>
+            <div class="runner-odds">15.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 28.0 · Avg3 — · Grd↑ 54 · Stal —% · 28d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">GRD_UP_STRONG</span><span class="chip positive">DST_UP_OK</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">RECENT_TOP2</span><span class="chip info">DAYS_SWEET</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Expensive Emotion<span class="draw">(0)</span></div>
+            <div class="runner-odds">11.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 27.0 · Avg3 — · Grd↑ 54 · Stal —% · 20d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip info">LAST_5</span><span class="chip info">DAYS_SWEET</span><span class="chip info">CRS</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">14:08</span>Yarmouth</div>
+        <div class="race-info">£5k - G/F - 1m</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Gladiadora<span class="draw">(5)</span></div>
+            <div class="runner-odds">5.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 70.0 · Avg3 69 · Grd↑ 74 · Stal 10% · 15d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_OK</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_OK</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Hello Cotai<span class="draw">(10)</span></div>
+            <div class="runner-odds">5.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 63.0 · Avg3 70 · Grd↑ 66 · Stal 10% · 14d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">DST_UP_OK</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_OK</span><span class="chip positive">RATING_STRONG</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">14:20</span>York</div>
+        <div class="race-info">£34k - Good - 1m4f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Plage De Havre<span class="draw">(9)</span></div>
+            <div class="runner-odds">7.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 62.0 · Avg3 79 · Grd↑ 83 · Stal 14% · 36d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_STRONG</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_STRONG</span><span class="chip positive">RATING_STRONG</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Stressfree<span class="draw">(1)</span></div>
+            <div class="runner-odds">6.5</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 61.0 · Avg3 78 · Grd↑ 80 · Stal 13% · 17d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_OK</span><span class="chip positive">GRD_UP_STRONG</span><span class="chip positive">DST_UP_STRONG</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">RATING_ELITE</span><span class="chip info">LAST_2</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">14:33</span>Perth</div>
+        <div class="race-info">£5k - Good - 2m - Chas</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Garde Des Champs<span class="draw">(111)</span></div>
+            <div class="runner-odds">15.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 36.0 · Avg3 65 · Grd↑ 69 · Stal —% · 22d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip info">DROPPED_LAST</span><span class="chip info">DAYS_SWEET</span><span class="chip info">CRS</span><span class="chip info">AVG_PLUS_SURFACE_TRIP</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Newtown Rambler<span class="draw">(115)</span></div>
+            <div class="runner-odds">3.2</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 28.0 · Avg3 56 · Grd↑ 68 · Stal —% · 25d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">WGT_OK</span><span class="chip positive">LAST_WIN</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">RECENT_TOP2</span><span class="chip info">BAD_JUMP_FORM</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">14:40</span>Yarmouth</div>
+        <div class="race-info">£13k - G/F - 5f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Almaty Star<span class="draw">(13)</span></div>
+            <div class="runner-odds">6.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 85.0 · Avg3 77 · Grd↑ 74 · Stal 9% · 31d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_STRONG</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_STRONG</span><span class="chip positive">RATING_OK</span><span class="chip positive">LAST_WIN</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Grandlad<span class="draw">(6)</span></div>
+            <div class="runner-odds win">8.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 69.0 · Avg3 75 · Grd↑ 77 · Stal 12% · 16d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_OK</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_STRONG</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_ELITE</span><span class="chip positive">LAST_WIN</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">14:55</span>York</div>
+        <div class="race-info">£31k - Good - 6f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Fast Track Harry<span class="draw">(16)</span></div>
+            <div class="runner-odds">15.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 64.0 · Avg3 76 · Grd↑ 75 · Stal 13% · 17d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_STRONG</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_STRONG</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Fahrenheit Seven<span class="draw">(15)</span></div>
+            <div class="runner-odds">11.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 63.0 · Avg3 80 · Grd↑ 78 · Stal 10% · 15d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_OK</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">15:08</span>Perth</div>
+        <div class="race-info">£5k - Good - 3m3f - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Buy Some Time<span class="draw">(107)</span></div>
+            <div class="runner-odds">21.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 43.0 · Avg3 65 · Grd↑ 74 · Stal —% · 19d</span>
+          </div>
+          <div class="chips"><span class="chip info">BIG_PRICE_NEG</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_3</span><span class="chip info">IMPROVING_LAST</span><span class="chip info">DAYS_SWEET</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Manowest<span class="draw">(106)</span></div>
+            <div class="runner-odds">7.5</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 37.0 · Avg3 59 · Grd↑ 61 · Stal —% · 76d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_OK</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_3</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">RECENT_TOP2</span><span class="chip info">LAYOFF_WARN</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">15:18</span>Yarmouth</div>
+        <div class="race-info">£5k - G/F - 6f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Dubai Charm<span class="draw">(4)</span></div>
+            <div class="runner-odds">2.8</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 56.0 · Avg3 — · Grd↑ 67 · Stal 17% · 16d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">SHORT_CAUTION</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_ELITE</span></div>
+        </div>
+    </div>
+    <div class="race shortlisted">
+      <div class="race-header">
+        <div class="race-title"><span class="time">15:30</span>York</div>
+        <div class="race-info">£94k - Good - 6f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Kind Of Blue<span class="draw">(2)</span></div>
+            <div class="runner-odds">7.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 65.0 · Avg3 82 · Grd↑ 85 · Stal 14% · 206d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip info">LAST_2</span></div>
+        </div>
+        <div class="runner shortlisted">
+          <div class="runner-head">
+            <div class="runner-name">Aramram<span class="draw">(7)</span></div>
+            <div class="runner-odds in-band">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 59.0 · Avg3 79 · Grd↑ 81 · Stal 14% · 26d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_OK</span><span class="chip positive">GRD_UP_STRONG</span><span class="chip positive">DST_UP_STRONG</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_ELITE</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">15:43</span>Perth</div>
+        <div class="race-info">£5k - Good - 3m - Chas</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Similar Story<span class="draw">(89)</span></div>
+            <div class="runner-odds">13.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 44.0 · Avg3 54 · Grd↑ 62 · Stal —% · 40d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_OK</span><span class="chip info">LAST_3</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Attaboyarchie<span class="draw">(100)</span></div>
+            <div class="runner-odds">3.5</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 36.0 · Avg3 50 · Grd↑ 63 · Stal —% · 30d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">WGT_STRONG</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">15:53</span>Yarmouth</div>
+        <div class="race-info">£5k - G/F - 6f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Creative Queen<span class="draw">(3)</span></div>
+            <div class="runner-odds">3.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 64.0 · Avg3 61 · Grd↑ 66 · Stal 0% · 14d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_OK</span><span class="chip positive">DST_UP_OK</span><span class="chip positive">DRAW_STRONG</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">RATING_ELITE</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Viviana<span class="draw">(5)</span></div>
+            <div class="runner-odds">4.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 35.0 · Avg3 — · Grd↑ 67 · Stal 9% · 12d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip info">LAST_3</span><span class="chip info">DAYS_SWEET</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">16:05</span>York</div>
+        <div class="race-info">£74k - Good - 1m2½f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Moments Of Joy<span class="draw">(3)</span></div>
+            <div class="runner-odds">6.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 64.0 · Avg3 68 · Grd↑ 72 · Stal 18% · 39d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DRAW_OK</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RECENT_TOP2</span><span class="chip info">DAYS_SWEET</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Felicitas<span class="draw">(1)</span></div>
+            <div class="runner-odds">3.5</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 52.0 · Avg3 — · Grd↑ 72 · Stal 11% · 18d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">GRD_UP_OK</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">RATING_ELITE</span><span class="chip positive">LAST_WIN</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">16:18</span>Perth</div>
+        <div class="race-info">£3k - Good - 3m - Chas</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Potters Party<span class="draw">(121)</span></div>
+            <div class="runner-odds">6.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 67.0 · Avg3 64 · Grd↑ 66 · Stal —% · 20d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">LAST_WIN</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Phantoms Cave<span class="draw">(0)</span></div>
+            <div class="runner-odds">1.5</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 25.0 · Avg3 — · Grd↑ 54 · Stal —% · 22d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">VERY_SHORT_NEG</span><span class="chip positive">GRD_UP_STRONG</span><span class="chip positive">DST_UP_STRONG</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">DAYS_SWEET</span><span class="chip info">OPP80_SUPPORT</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">16:28</span>Yarmouth</div>
+        <div class="race-info">£6k - G/F - 7f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Physique<span class="draw">(4)</span></div>
+            <div class="runner-odds">15.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 58.0 · Avg3 73 · Grd↑ 75 · Stal 12% · 26d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_OK</span><span class="chip positive">DRAW_OK</span><span class="chip positive">WGT_STRONG</span><span class="chip positive">STAL_STRONG</span><span class="chip positive">RATING_OK</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Noble Guest<span class="draw">(7)</span></div>
+            <div class="runner-odds">7.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 50.0 · Avg3 71 · Grd↑ 73 · Stal 11% · 14d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_OK</span><span class="chip positive">GRD_UP_STRONG</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">STAL_OK</span><span class="chip info">LAST_3</span></div>
+        </div>
+    </div>
+    <div class="race shortlisted">
+      <div class="race-header">
+        <div class="race-title"><span class="time">16:40</span>York</div>
+        <div class="race-info">£15k - Good - 7f</div>
+      </div>
+      
+        <div class="runner shortlisted">
+          <div class="runner-head">
+            <div class="runner-name">The Resdev Scholar<span class="draw">(6)</span></div>
+            <div class="runner-odds in-band">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 78.0 · Avg3 71 · Grd↑ 75 · Stal 12% · 8d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_ELITE</span><span class="chip info">LAST_3</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">First Legion<span class="draw">(7)</span></div>
+            <div class="runner-odds">11.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 64.0 · Avg3 72 · Grd↑ 75 · Stal 12% · 10d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_OK</span><span class="chip info">LAST_5</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">16:47</span>Punchestown</div>
+        <div class="race-info">£6k - Good - 2m - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Porcupine Bank<span class="draw">(0)</span></div>
+            <div class="runner-odds">7.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 26.0 · Avg3 — · Grd↑ 43 · Stal —% · 23d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_3</span><span class="chip info">DAYS_SWEET</span><span class="chip info">OPP80_SUPPORT</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Out Of Aces<span class="draw">(0)</span></div>
+            <div class="runner-odds">2.2</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 19.0 · Avg3 — · Grd↑ 43 · Stal —% · 56d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">SHORT_CAUTION</span><span class="chip positive">GRD_UP_OK</span><span class="chip positive">DST_UP_OK</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">DAYS_OK</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">16:55</span>Perth</div>
+        <div class="race-info">£4k - Good - 2m4½f - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Velvet Vulcan<span class="draw">(81)</span></div>
+            <div class="runner-odds">4.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 51.0 · Avg3 56 · Grd↑ 61 · Stal —% · 18d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip info">DAYS_SWEET</span><span class="chip info">CRS</span><span class="chip info">AVG_PLUS_SURFACE_TRIP</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Byron Hill<span class="draw">(97)</span></div>
+            <div class="runner-odds">2.5</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 39.0 · Avg3 54 · Grd↑ 58 · Stal —% · 41d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">SHORT_CAUTION</span><span class="chip positive">AVG3_STRONG</span><span class="chip positive">GRD_UP_STRONG</span><span class="chip positive">DST_UP_STRONG</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_3</span><span class="chip info">IMPROVING_LAST</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">17:03</span>Yarmouth</div>
+        <div class="race-info">£4k - G/F - 5f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Staniel Cay<span class="draw">(4)</span></div>
+            <div class="runner-odds">4.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 62.0 · Avg3 64 · Grd↑ 68 · Stal 13% · 24d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_OK</span><span class="chip positive">LAST_WIN</span><span class="chip info">IMPROVING_LAST</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Loleeta<span class="draw">(5)</span></div>
+            <div class="runner-odds">4.5</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 57.0 · Avg3 68 · Grd↑ 57 · Stal 8% · 33d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_STRONG</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">RATING_STRONG</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">17:09</span>Bath</div>
+        <div class="race-info">£5k - Firm - 5f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Anglesey Lad<span class="draw">(2)</span></div>
+            <div class="runner-odds">13.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 57.0 · Avg3 67 · Grd↑ 68 · Stal 10% · 27d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">STAL_OK</span><span class="chip info">LAST_5</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Wedgewood<span class="draw">(3)</span></div>
+            <div class="runner-odds">3.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 35.0 · Avg3 64 · Grd↑ 0 · Stal 7% · 12d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_OK</span><span class="chip positive">RATING_ELITE</span><span class="chip info">LAST_2</span><span class="chip positive">RECENT_TOP2</span><span class="chip info">DAYS_SWEET</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">17:15</span>York</div>
+        <div class="race-info">£15k - Good - 1m4f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Great Bedwyn<span class="draw">(7)</span></div>
+            <div class="runner-odds">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 51.0 · Avg3 74 · Grd↑ 74 · Stal 10% · 39d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_OK</span><span class="chip positive">DST_UP_STRONG</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_OK</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Galyx<span class="draw">(9)</span></div>
+            <div class="runner-odds">8.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 48.0 · Avg3 72 · Grd↑ 77 · Stal 13% · 321d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_OK</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">17:20</span>Punchestown</div>
+        <div class="race-info">£6k - Good - 2m - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Aruntothequeen<span class="draw">(109)</span></div>
+            <div class="runner-odds">15.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 48.0 · Avg3 52 · Grd↑ 63 · Stal —% · 100d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Salsinha<span class="draw">(118)</span></div>
+            <div class="runner-odds">7.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 45.0 · Avg3 43 · Grd↑ 61 · Stal —% · 38d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_OK</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_5</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip info">DAYS_SWEET</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">17:25</span>Perth</div>
+        <div class="race-info">£4k - Good - 2m4½f - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Malangen<span class="draw">(83)</span></div>
+            <div class="runner-odds">5.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 53.0 · Avg3 55 · Grd↑ 60 · Stal —% · 3d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_OK</span><span class="chip info">LAST_3</span><span class="chip info">IMPROVING_LAST</span><span class="chip info">BAD_JUMP_FORM</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Livano Bello<span class="draw">(97)</span></div>
+            <div class="runner-odds">2.6</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile PLACE">PLACE</span>
+            <span class="meta-stats">Score 40.0 · Avg3 52 · Grd↑ 53 · Stal —% · 36d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">SHORT_CAUTION</span><span class="chip positive">AVG3_STRONG</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip info">PROGRESSIVE_FORM</span><span class="chip positive">CONSISTENT_TOP5</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">17:30</span>Newton Abbot</div>
+        <div class="race-info">£5k - Good - 2m1f - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Arctic Voyage<span class="draw">(112)</span></div>
+            <div class="runner-odds">2.5</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 65.0 · Avg3 50 · Grd↑ 57 · Stal —% · 26d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">SHORT_CAUTION</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">LAST_WIN</span><span class="chip info">IMPROVING_LAST</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Jubertilee<span class="draw">(0)</span></div>
+            <div class="runner-odds">3.2</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 25.0 · Avg3 — · Grd↑ 35 · Stal —% · 6d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip info">CRS</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">17:42</span>Bath</div>
+        <div class="race-info">£5k - Firm - 5½f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">El Lambo<span class="draw">(1)</span></div>
+            <div class="runner-odds">5.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 52.0 · Avg3 — · Grd↑ 0 · Stal 11% · 12d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_ELITE</span><span class="chip info">LAST_5</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Martha Brown<span class="draw">(2)</span></div>
+            <div class="runner-odds">21.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score -10.0 · Avg3 — · Grd↑ 0 · Stal 11% · 8d</span>
+          </div>
+          <div class="chips"><span class="chip info">BIG_PRICE_NEG</span><span class="chip positive">STAL_ELITE</span><span class="chip info">OPP_WEAK</span><span class="chip info">OUTSIDER_NO_ENGINE</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">17:50</span>Punchestown</div>
+        <div class="race-info">£5k - Good - 2m - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Single Edition<span class="draw">(95)</span></div>
+            <div class="runner-odds">6.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 41.0 · Avg3 55 · Grd↑ 62 · Stal —% · 349d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_STRONG</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip info">PROGRESSIVE_FORM</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Maralinga<span class="draw">(80)</span></div>
+            <div class="runner-odds">3.2</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 28.0 · Avg3 51 · Grd↑ 54 · Stal —% · 166d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_STRONG</span><span class="chip positive">DST_UP_ELITE</span><span class="chip info">LAST_2</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+    </div>
+    <div class="race shortlisted">
+      <div class="race-header">
+        <div class="race-title"><span class="time">18:00</span>Newton Abbot</div>
+        <div class="race-info">£4k - Good - 2m2½f - Hurd</div>
+      </div>
+      
+        <div class="runner shortlisted">
+          <div class="runner-head">
+            <div class="runner-name">Blackwater Lilly<span class="draw">(100)</span></div>
+            <div class="runner-odds in-band">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 76.0 · Avg3 57 · Grd↑ 63 · Stal —% · 32d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip info">PROGRESSIVE_FORM</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Reel Orange<span class="draw">(90)</span></div>
+            <div class="runner-odds">15.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 33.0 · Avg3 54 · Grd↑ 64 · Stal —% · 6d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_STRONG</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">18:12</span>Bath</div>
+        <div class="race-info">£5k - Firm - 1m</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Vitality<span class="draw">(3)</span></div>
+            <div class="runner-odds">3.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile PLACE">PLACE</span>
+            <span class="meta-stats">Score 41.0 · Avg3 — · Grd↑ 0 · Stal 13% · 14d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_OK</span><span class="chip positive">WGT_OK</span><span class="chip positive">STAL_OK</span><span class="chip positive">RATING_STRONG</span><span class="chip info">LAST_2</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Mobberley Rose<span class="draw">(4)</span></div>
+            <div class="runner-odds">3.5</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 38.0 · Avg3 — · Grd↑ 0 · Stal 17% · 57d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">DRAW_OK</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_ELITE</span><span class="chip positive">LAST_WIN</span><span class="chip positive">DAYS_OK</span></div>
+        </div>
+    </div>
+    <div class="race shortlisted">
+      <div class="race-header">
+        <div class="race-title"><span class="time">18:20</span>Punchestown</div>
+        <div class="race-info">£5k - Good - 2m - Hurd</div>
+      </div>
+      
+        <div class="runner shortlisted">
+          <div class="runner-head">
+            <div class="runner-name">Walk On Annilog<span class="draw">(97)</span></div>
+            <div class="runner-odds in-band">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 66.0 · Avg3 51 · Grd↑ 59 · Stal —% · 36d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Ode To Joy<span class="draw">(85)</span></div>
+            <div class="runner-odds">7.5</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 65.0 · Avg3 54 · Grd↑ 56 · Stal —% · 24d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip info">LAST_3</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip info">DAYS_SWEET</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">18:30</span>Newton Abbot</div>
+        <div class="race-info">£6k - Good - 2m5f - Chas</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Siam Park<span class="draw">(115)</span></div>
+            <div class="runner-odds">21.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 40.0 · Avg3 65 · Grd↑ 68 · Stal —% · 28d</span>
+          </div>
+          <div class="chips"><span class="chip info">BIG_PRICE_NEG</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_STRONG</span><span class="chip positive">WGT_STRONG</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">CONSISTENT_TOP5</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Move With The Beat<span class="draw">(113)</span></div>
+            <div class="runner-odds">8.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 40.0 · Avg3 63 · Grd↑ 67 · Stal —% · 19d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_STRONG</span><span class="chip positive">GRD_UP_STRONG</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">LAST_WIN</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip positive">RECENT_TOP2</span><span class="chip info">BAD_JUMP_FORM</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">18:42</span>Bath</div>
+        <div class="race-info">£4k - Firm - 1m</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Foothold<span class="draw">(3)</span></div>
+            <div class="runner-odds">5.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 49.0 · Avg3 64 · Grd↑ 57 · Stal 9% · 11d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_OK</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_OK</span><span class="chip positive">STAL_STRONG</span><span class="chip positive">RATING_OK</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Just A Gambler<span class="draw">(4)</span></div>
+            <div class="runner-odds">6.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 48.0 · Avg3 61 · Grd↑ 49 · Stal 15% · 12d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_OK</span><span class="chip positive">DST_UP_OK</span><span class="chip positive">DRAW_OK</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip positive">RATING_ELITE</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">18:50</span>Punchestown</div>
+        <div class="race-info">£6k - Good - 3m - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Captains Speech<span class="draw">(0)</span></div>
+            <div class="runner-odds">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 31.0 · Avg3 — · Grd↑ 60 · Stal —% · 32d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">DAYS_SWEET</span><span class="chip info">OPP90_SUPPORT</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Will Wilde<span class="draw">(115)</span></div>
+            <div class="runner-odds">7.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 21.0 · Avg3 47 · Grd↑ 58 · Stal —% · 500d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_STRONG</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">DROPPED_LAST</span><span class="chip positive">RECENT_TOP2</span><span class="chip info">BAD_JUMP_FORM</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">19:00</span>Newton Abbot</div>
+        <div class="race-info">£5k - Good - 2m1f - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Cobblers Boy<span class="draw">(105)</span></div>
+            <div class="runner-odds">2.4</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 53.0 · Avg3 58 · Grd↑ 65 · Stal —% · 6d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">SHORT_CAUTION</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_STRONG</span><span class="chip positive">LAST_WIN</span><span class="chip info">IMPROVING_LAST</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Blacksamssenorita<span class="draw">(108)</span></div>
+            <div class="runner-odds">11.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 30.0 · Avg3 51 · Grd↑ 54 · Stal —% · 35d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">DST_UP_STRONG</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip positive">RECENT_TOP2</span><span class="chip info">BAD_JUMP_FORM</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">19:12</span>Bath</div>
+        <div class="race-info">£3k - Firm - 1m3½f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Virtual Hug<span class="draw">(5)</span></div>
+            <div class="runner-odds">5.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 60.0 · Avg3 69 · Grd↑ 70 · Stal 7% · 8d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_STRONG</span><span class="chip positive">GRD_UP_STRONG</span><span class="chip positive">DST_UP_STRONG</span><span class="chip positive">DRAW_OK</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">RATING_ELITE</span><span class="chip positive">LAST_WIN</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Moon Over The Sea<span class="draw">(4)</span></div>
+            <div class="runner-odds">2.6</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 56.0 · Avg3 69 · Grd↑ 71 · Stal 12% · 5d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">SHORT_CAUTION</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_OK</span><span class="chip positive">RATING_ELITE</span></div>
+        </div>
+    </div>
+    <div class="race shortlisted">
+      <div class="race-header">
+        <div class="race-title"><span class="time">19:20</span>Punchestown</div>
+        <div class="race-info">£5k - Good - 3m - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Cullig<span class="draw">(100)</span></div>
+            <div class="runner-odds">5.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 54.0 · Avg3 55 · Grd↑ 62 · Stal —% · 28d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_5</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+        <div class="runner shortlisted">
+          <div class="runner-head">
+            <div class="runner-name">Wakey Wakey Man<span class="draw">(89)</span></div>
+            <div class="runner-odds in-band">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 52.0 · Avg3 49 · Grd↑ 61 · Stal —% · 28d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_STRONG</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_STRONG</span><span class="chip info">LAST_3</span><span class="chip info">IMPROVING_LAST</span><span class="chip info">PROGRESSIVE_FORM</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">19:30</span>Newton Abbot</div>
+        <div class="race-info">£8k - Good - 3m2f - Chas</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Viroflay<span class="draw">(140)</span></div>
+            <div class="runner-odds">6.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 57.0 · Avg3 74 · Grd↑ 74 · Stal —% · 32d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">DST_UP_STRONG</span><span class="chip positive">WGT_STRONG</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">CONSISTENT_TOP5</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Certainly Red<span class="draw">(137)</span></div>
+            <div class="runner-odds">5.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 29.0 · Avg3 70 · Grd↑ 75 · Stal —% · 66d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_3</span><span class="chip positive">CONSISTENT_TOP5</span><span class="chip positive">RECENT_TOP2</span><span class="chip info">BAD_JUMP_FORM</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">19:42</span>Bath</div>
+        <div class="race-info">£3k - Firm - 1m2f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Lucky Sevens<span class="draw">(1)</span></div>
+            <div class="runner-odds">3.8</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 41.0 · Avg3 57 · Grd↑ 66 · Stal 8% · 14d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_STRONG</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DRAW_OK</span><span class="chip positive">WGT_STRONG</span><span class="chip positive">RATING_ELITE</span><span class="chip info">LAST_3</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Panthere Noir<span class="draw">(4)</span></div>
+            <div class="runner-odds">13.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 41.0 · Avg3 60 · Grd↑ 0 · Stal 11% · 38d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">STAL_STRONG</span><span class="chip positive">RATING_OK</span><span class="chip info">LAST_5</span><span class="chip info">IMPROVING_LAST</span><span class="chip info">PROGRESSIVE_FORM</span><span class="chip info">DAYS_SWEET</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">19:50</span>Punchestown</div>
+        <div class="race-info">£5k - Good - 3m - Hurd</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Annie Button<span class="draw">(92)</span></div>
+            <div class="runner-odds">5.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 59.0 · Avg3 46 · Grd↑ 61 · Stal —% · 2d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_STRONG</span><span class="chip positive">LAST_WIN</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">RECENT_TOP2</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Written In My Soul<span class="draw">(85)</span></div>
+            <div class="runner-odds">2.2</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 34.0 · Avg3 48 · Grd↑ 54 · Stal —% · 22d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">SHORT_CAUTION</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip info">LAST_5</span><span class="chip info">IMPROVING_LAST</span><span class="chip info">PROGRESSIVE_FORM</span><span class="chip info">BAD_JUMP_FORM</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">20:00</span>Newton Abbot</div>
+        <div class="race-info">£3k - Good - 3m2f - Chas</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Golden Son<span class="draw">(130)</span></div>
+            <div class="runner-odds">6.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 69.0 · Avg3 65 · Grd↑ 69 · Stal —% · 33d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span><span class="chip positive">CONSISTENT_TOP5</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Est Illic<span class="draw">(84)</span></div>
+            <div class="runner-odds">2.8</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 28.0 · Avg3 58 · Grd↑ 65 · Stal —% · 20d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">SHORT_CAUTION</span><span class="chip positive">AVG3_STRONG</span><span class="chip positive">WGT_STRONG</span><span class="chip info">LAST_3</span><span class="chip info">IMPROVING_LAST</span><span class="chip info">PROGRESSIVE_FORM</span><span class="chip info">BAD_JUMP_FORM</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">20:12</span>Bath</div>
+        <div class="race-info">£3k - Firm - 1m2f</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Baynoona<span class="draw">(1)</span></div>
+            <div class="runner-odds">4.5</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile WIN">WIN</span>
+            <span class="meta-stats">Score 67.0 · Avg3 67 · Grd↑ 68 · Stal 9% · 13d</span>
+          </div>
+          <div class="chips"><span class="chip amber">MKT_CLOSE</span><span class="chip info">BSP_ZONE_3_8</span><span class="chip positive">AVG3_ELITE</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DRAW_OK</span><span class="chip positive">RATING_ELITE</span><span class="chip info">LAST_2</span><span class="chip info">IMPROVING_LAST</span></div>
+        </div>
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Galactic Glow<span class="draw">(6)</span></div>
+            <div class="runner-odds">15.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score 52.0 · Avg3 67 · Grd↑ 74 · Stal 13% · 113d</span>
+          </div>
+          <div class="chips"><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">AVG3_STRONG</span><span class="chip positive">GRD_UP_ELITE</span><span class="chip positive">DST_UP_ELITE</span><span class="chip positive">DRAW_ELITE</span><span class="chip positive">WGT_ELITE</span><span class="chip positive">STAL_ELITE</span><span class="chip info">IMPROVING_LAST</span></div>
+        </div>
+    </div>
+    <div class="race">
+      <div class="race-header">
+        <div class="race-title"><span class="time">20:20</span>Punchestown</div>
+        <div class="race-info">£6k - Good - 2m - NHF</div>
+      </div>
+      
+        <div class="runner">
+          <div class="runner-head">
+            <div class="runner-name">Mister Killeens<span class="draw">(0)</span></div>
+            <div class="runner-odds">9.0</div>
+          </div>
+          <div class="runner-meta-line">
+            <span class="profile NOBET">NO BET</span>
+            <span class="meta-stats">Score -5.0 · Avg3 — · Grd↑ 0 · Stal —% · 170d</span>
+          </div>
+          <div class="chips"><span class="chip info">MKT1_LIGHT</span><span class="chip info">BSP_ZONE_8_15</span><span class="chip positive">WGT_ELITE</span><span class="chip warning">ABSENT</span><span class="chip info">TOP_LR</span><span class="chip info">OPP70_SUPPORT</span><span class="chip info">ABSENT_EXTRA</span></div>
+        </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div>Staking rule: WIN profile · SP 8.0-15.0 · Best WIN pick per race</div>
+    <div>Generated 11:55, 13 May</div>
+  </div>
+</div>
+
+<script>
+function show(which) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + which).classList.add('active');
+  document.querySelector('.tab.tab-' + which).classList.add('active');
+}
+</script>
+</body>
+</html>
