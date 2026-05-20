@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magpie Tips — Focus Picks 2026-05-20</title>
+<style>
+  :root {
+    --bg: #f7f7f8;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --accent: #d4af37;
+    --accent-dark: #b8941f;
+    --border: #e5e7eb;
+    --green: #16a34a;
+    --red: #dc2626;
+    --conf-high: #fef3c7;
+    --conf-mid: #f3f4f6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0 0 60px 0;
+    line-height: 1.5;
+  }
+  .header {
+    background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+    color: white;
+    padding: 16px 16px 12px;
+    text-align: center;
+    border-bottom: 3px solid var(--accent);
+  }
+  .header h1 {
+    margin: 0 0 4px 0;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+  }
+  .header .subtitle {
+    color: var(--accent);
+    font-size: 13px;
+    opacity: 0.9;
+  }
+  .nav {
+    display: flex;
+    background: #1a1a1a;
+    border-bottom: 1px solid var(--accent-dark);
+  }
+  .nav a {
+    flex: 1;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    padding: 12px 8px;
+    font-size: 14px;
+    border-right: 1px solid #333;
+    transition: background 0.2s;
+  }
+  .nav a:last-child { border-right: none; }
+  .nav a.active {
+    background: var(--accent);
+    color: black;
+    font-weight: 600;
+  }
+  .nav a:hover:not(.active) {
+    background: #2a2a2a;
+  }
+  .summary {
+    background: var(--card);
+    margin: 12px;
+    padding: 14px;
+    border-radius: 10px;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .summary h2 {
+    margin: 0 0 6px 0;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .summary p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .pick {
+    background: var(--card);
+    margin: 10px 12px;
+    padding: 14px;
+    border-radius: 10px;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .pick-rank {
+    display: inline-block;
+    background: var(--accent);
+    color: black;
+    font-weight: 700;
+    font-size: 14px;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  .pick-name {
+    font-size: 17px;
+    font-weight: 600;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .pick-sp {
+    float: right;
+    background: #1a1a1a;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .pick-race {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 8px 0 6px;
+  }
+  .pick-reason {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin: 8px 0;
+    font-size: 13px;
+    font-style: italic;
+    color: #78350f;
+  }
+  .pick-commentary {
+    background: #f9fafb;
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin: 6px 0;
+    font-size: 12.5px;
+    color: #374151;
+    line-height: 1.5;
+  }
+  .pick-chips {
+    margin-top: 8px;
+    line-height: 1.8;
+  }
+  .chip {
+    display: inline-block;
+    background: #f3f4f6;
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10.5px;
+    margin: 2px 3px 2px 0;
+    color: #4b5563;
+  }
+  .chip.positive { background: #d1fae5; border-color: #6ee7b7; color: #065f46; }
+  .chip.warning { background: #fef3c7; border-color: #fde68a; color: #92400e; }
+  .footer {
+    text-align: center;
+    padding: 20px 12px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .pick-bsp {
+    display: inline-block;
+    background: #fef3c7;
+    color: #78350f;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-left: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⭐ MAGPIE TIPS</h1>
+  <div class="subtitle">Focus Picks — 2026-05-20</div>
+</div>
+
+<div class="nav">
+  <a href="index.html">All Picks</a>
+  <a href="focus.html" class="active">⭐ Focus (10)</a>
+</div>
+
+<div class="summary">
+  <h2>Commentary-led selections</h2>
+  <p>These 10 picks were chosen primarily on spotlight commentary quality, supported by chip patterns. The full pick list with all chips is available on the "All Picks" tab for entertainment and visual analysis.</p>
+</div>
+
+<div class="pick">
+  <div>
+    <span class="pick-rank">1</span>
+    <span class="pick-name">Cisco Disco</span>
+    <span class="pick-sp">3.50</span>
+    
+  </div>
+  <div class="pick-race">Ayr #3 - 14:42 - £5k - G/F - 1m1f </div>
+  <div class="pick-reason">Yard won this last year; 3 wins from last 3; commentary: 'continued winning ways, improved again... on an upward trajectory when last seen'. The only doubt is the break but the form language is enthusiastic.</div>
+  <div class="pick-commentary">Yard won this last year; continued winning ways, improved again when landing a handicap by 2l off a 5lb lower mark here last time; effective 8-10f, acts on heavy and good, but not fast ground; on an upward trajectory when last seen, chance if ready to roll back from a break. (Forecast 5/2)</div>
+  <div class="pick-chips"><span class="chip">C_WR_ELITE</span><span class="chip">LAST3_3WINS</span><span class="chip">LAST3_ALL_TOP3</span><span class="chip">FORM_WR_HIGH</span><span class="chip">CLS_WR_ELITE</span><span class="chip">GRD_WR_OK</span><span class="chip">CRS_SPD_STRONG</span><span class="chip">TR14_ELITE</span><span class="chip">TRC_ELITE</span><span class="chip positive">JK14_ELITE</span><span class="chip">JKTR_ELITE</span><span class="chip">OPPBTN_MID</span><span class="chip">WGT_OK</span><span class="chip warning">CLS_UP</span></div>
+</div>
+
+<div class="pick">
+  <div>
+    <span class="pick-rank">2</span>
+    <span class="pick-name">Bridget Mary</span>
+    <span class="pick-sp">11.00</span>
+    
+  </div>
+  <div class="pick-race">Ffos Las #5 - 16:50 - £3k - Soft - 3m½f - Chas</div>
+  <div class="pick-reason">Hammered the same C&D by 89 lengths last time. Commentary: 'in fine form, should again go well after a small rise'. Strongest endorsement on the card and at 11.0 looks overpriced.</div>
+  <div class="pick-commentary">Improved, scored with plenty in hand when landing a handicap by 89l off a 2lb lower mark here last time; effective 2m4f-3m, acts on soft and good; in fine form, should again go well after a small rise. (Forecast 4/6)</div>
+  <div class="pick-chips"><span class="chip">SMALL_FIELD</span><span class="chip">D_WR_ELITE</span><span class="chip">LAST3_1WIN</span><span class="chip">LAST3_2TOP3</span><span class="chip positive">FORM_WR_MID</span><span class="chip">BAD_JUMP_FORM</span><span class="chip">GRD_WR_ELITE</span><span class="chip">AVG3_ELITE</span><span class="chip">MAX_OK</span><span class="chip">CRS_SPD_ELITE</span><span class="chip">DST_SPD_ELITE</span><span class="chip">GRD_SPD_OK</span><span class="chip">TR14_OK</span><span class="chip">OPPBTN_MID</span></div>
+</div>
+
+<div class="pick">
+  <div>
+    <span class="pick-rank">3</span>
+    <span class="pick-name">Rebel Tribesman</span>
+    <span class="pick-sp">11.00</span>
+    
+  </div>
+  <div class="pick-race">Warwick #1 - 14:30 - £5k - Good - 2m3f - Hurd</div>
+  <div class="pick-reason">Trainer in form. Commentary: 'form of bumper win franked emphatically, more to come over hurdles and should be winning soon'. 11.0 is generous for this projection.</div>
+  <div class="pick-commentary">Improved suited by positive ride when second beaten 2l in a maiden hurdle at Sedgefield latest; trainer in form; effective 2m, acts on good; form of bumper win franked emphatically, more to come over hurdles and should be winning soon. (Forecast 13/8)</div>
+  <div class="pick-chips"><span class="chip">MEDIUM_FIELD</span><span class="chip">LAST3_1WIN</span><span class="chip">LAST3_ALL_TOP3</span><span class="chip">FORM_WR_HIGH</span><span class="chip">GRD_WR_ELITE</span><span class="chip">MAX_ELITE</span><span class="chip">GRD_SPD_ELITE</span><span class="chip">TR14_ELITE</span><span class="chip">TRC_ELITE</span><span class="chip positive">JK14_ELITE</span><span class="chip">JKTR_ELITE</span><span class="chip">OPPBTN_MID</span><span class="chip">WGT_ELITE</span><span class="chip warning">DST_UP_BIG</span></div>
+</div>
+
+<div class="pick">
+  <div>
+    <span class="pick-rank">4</span>
+    <span class="pick-name">Kirkdale</span>
+    <span class="pick-sp">4.50</span>
+    
+  </div>
+  <div class="pick-race">Kempton #7 - 20:30 - £6k - Std/Slw - 6f </div>
+  <div class="pick-reason">Reapplied visor + 2-from-last-3. Commentary literally says: 'in fine form, can complete hat-trick'. The spotlight is straight up tipping it.</div>
+  <div class="pick-commentary">Good attitude in reapplied visor, improved landing a handicap by 1 1/4l off a 4lb lower mark at Southwell last time; suited by 6/7f, acts on soft, good and AW; in fine form, can complete hat-trick.</div>
+  <div class="pick-chips"><span class="chip">LAST3_2WINS</span><span class="chip">LAST3_2TOP3</span><span class="chip positive">FORM_WR_MID</span><span class="chip">MAX_STRONG</span><span class="chip">DST_SPD_STRONG</span><span class="chip">GRD_SPD_ELITE</span><span class="chip">OPPBTN_MID</span><span class="chip">WGT_OK</span><span class="chip warning">CLS_UP</span><span class="chip positive">SS_FT_HEADGEAR</span><span class="chip">NOTE_VSOR+</span><span class="chip positive">COMM_GOING_PROVEN</span><span class="chip">COMM_HIGHER_TODAY</span></div>
+</div>
+
+<div class="pick">
+  <div>
+    <span class="pick-rank">5</span>
+    <span class="pick-name">Lion Of The Desert</span>
+    <span class="pick-sp">21.00</span>
+    
+  </div>
+  <div class="pick-race">Ffos Las #1 - 14:50 - £3k - Soft - 2m4½f - Hurd</div>
+  <div class="pick-reason">Won C&D last time off a lower mark. Commentary: 'Did it cosily, improved again... generally consistent, progressing, good chance again'. COMM_GOING_PROVEN chip fires. 21.0 is overpriced.</div>
+  <div class="pick-commentary">Did it cosily, improved again suited by positive ride landing a handicap by 1 1/4l off a 5lb lower mark here last time; effective 2m2f-2m6f, acts on soft and good; generally consistent, progressing, good chance again. (Forecast 3/1)</div>
+  <div class="pick-chips"><span class="chip">SMALL_FIELD</span><span class="chip">LAST3_2WINS</span><span class="chip">LAST3_2TOP3</span><span class="chip positive">FORM_WR_MID</span><span class="chip">CLS_WR_OK</span><span class="chip">DST_SPD_OK</span><span class="chip">OPPBTN_MID</span><span class="chip">WGT_ELITE</span><span class="chip positive">SS_FT_HEADGEAR</span><span class="chip positive">COMM_GOING_PROVEN</span><span class="chip">COMM_IMPROVING</span><span class="chip">COMM_HIGHER_TODAY</span></div>
+</div>
+
+<div class="pick">
+  <div>
+    <span class="pick-rank">6</span>
+    <span class="pick-name">Mwafaq</span>
+    <span class="pick-sp">3.75</span>
+    
+  </div>
+  <div class="pick-race">Ayr #8 - 17:15 - £4k - G/F - 1m </div>
+  <div class="pick-reason">2 wins from last 3, FORM_WR_HIGH. Commentary: 'has been in excellent form, should again go well'. Solid 3.75 favorite-ish.</div>
+  <div class="pick-commentary">Ran to form despite failing in bid for four-timer when fifth beaten 1 1/2l off 62 last time, same mark here; effective 7/8f, suited by sound surface; has been in excellent form, should again go well. (Forecast 11/4)</div>
+  <div class="pick-chips"><span class="chip">MEDIUM_FIELD</span><span class="chip">LAST3_2WINS</span><span class="chip">LAST3_2TOP3</span><span class="chip">FORM_WR_HIGH</span><span class="chip">AVG3_ELITE</span><span class="chip">MAX_STRONG</span><span class="chip">GRD_SPD_ELITE</span><span class="chip">TR14_STRONG</span><span class="chip positive">JK14_ELITE</span><span class="chip">WGT_OK</span><span class="chip">DRAW_ELITE</span><span class="chip positive">SS_FT_HEADGEAR</span><span class="chip">COMM_SAME_MARK</span><span class="chip">JKY_CLAIM_3</span></div>
+</div>
+
+<div class="pick">
+  <div>
+    <span class="pick-rank">7</span>
+    <span class="pick-name">Full Force Gale</span>
+    <span class="pick-sp">5.00</span>
+    
+  </div>
+  <div class="pick-race">Warwick #3 - 15:30 - £6k - Good - 2m4f - Chas</div>
+  <div class="pick-reason">C&D winner last time off lower mark. Commentary: 'Did it comfortably and improved for debut experience... more to come over fences'. Tiny field but high-quality language.</div>
+  <div class="pick-commentary">Did it comfortably and improved for debut experience landing a handicap by 4 1/4l off a 5lb lower mark here last time; effective 2 1/2m, acts on good to soft, good; more to come over fences. (Forecast 10/11)</div>
+  <div class="pick-chips"><span class="chip">TINY_FIELD</span><span class="chip">LAST3_1WIN</span><span class="chip">LAST3_2TOP3</span><span class="chip">FORM_WR_HIGH</span><span class="chip positive">CD_SPD_ELITE</span><span class="chip">MAX_ELITE</span><span class="chip">CRS_SPD_ELITE</span><span class="chip">DST_SPD_ELITE</span><span class="chip">GRD_SPD_ELITE</span><span class="chip">TR14_OK</span><span class="chip">JKTR_OK</span><span class="chip">OPPBTN_MID</span><span class="chip">WGT_ELITE</span><span class="chip positive">SS_FT_HEADGEAR</span></div>
+</div>
+
+<div class="pick">
+  <div>
+    <span class="pick-rank">8</span>
+    <span class="pick-name">Thunderstorm Katie</span>
+    <span class="pick-sp">5.00</span>
+    
+  </div>
+  <div class="pick-race">Ayr #4 - 15:12 - £4k - G/F - 5f </div>
+  <div class="pick-reason">Beaten only a neck last time despite rearing start. Top course trainer. Commentary: 'good chance if building on latest and likes it here'. Course form proven.</div>
+  <div class="pick-commentary">Back to best despite rearing start beaten a neck off a 1lb higher mark at Hamilton last time; top course trainer; effective 5/6f, acts on any; good chance if building on latest and likes it here. (Forecast 5/1)</div>
+  <div class="pick-chips"><span class="chip">MEDIUM_FIELD</span><span class="chip">C_WR_ELITE</span><span class="chip">D_WR_ELITE</span><span class="chip">LAST3_1TOP3</span><span class="chip positive">FORM_WR_MID</span><span class="chip">CLS_WR_ELITE</span><span class="chip">GRD_WR_ELITE</span><span class="chip">AVG3_OK</span><span class="chip">GRD_SPD_ELITE</span><span class="chip">TR14_ELITE</span><span class="chip">TRC_ELITE</span><span class="chip">OPPBTN_MID</span><span class="chip">DRAW_ELITE</span><span class="chip warning">CLS_UP</span></div>
+</div>
+
+<div class="pick">
+  <div>
+    <span class="pick-rank">9</span>
+    <span class="pick-name">Im Workin On It</span>
+    <span class="pick-sp">4.33</span>
+    
+  </div>
+  <div class="pick-race">Kempton #6 - 20:00 - £6k - Std/Slw - 7f </div>
+  <div class="pick-reason">Recent C&D winner. Commentary: 'Back to winning ways... in-form, loves the track'. 'Loves the track' is a strong indicator. Mark rise is the only caveat.</div>
+  <div class="pick-commentary">Back to winning ways landing a handicap by 1/2l off a 4lb lower mark here last time; suited by 7f, probably stays 8f, acts on AW; in-form, loves the track, mark asks more. (Forecast 10/3)</div>
+  <div class="pick-chips"><span class="chip">LAST3_1WIN</span><span class="chip">LAST3_1TOP3</span><span class="chip">FORM_WR_HIGH</span><span class="chip positive">CD_SPD_ELITE</span><span class="chip">AVG3_STRONG</span><span class="chip">MAX_STRONG</span><span class="chip">CRS_SPD_ELITE</span><span class="chip">DST_SPD_ELITE</span><span class="chip">GRD_SPD_ELITE</span><span class="chip">JK14_OK</span><span class="chip">OPPBTN_MID</span><span class="chip">WGT_ELITE</span><span class="chip positive">SS_FT_HEADGEAR</span><span class="chip positive">COMM_GOING_PROVEN</span></div>
+</div>
+
+<div class="pick">
+  <div>
+    <span class="pick-rank">10</span>
+    <span class="pick-name">Yes And Yes</span>
+    <span class="pick-sp">4.33</span>
+    
+  </div>
+  <div class="pick-race">Warwick #2 - 15:00 - £5k - Good - 3m1½f - Chas</div>
+  <div class="pick-reason">Recent winner up in trip. Commentary: 'back in form, 5lb rise looks lenient'. Spotlight saying the horse is still ahead of the handicapper.</div>
+  <div class="pick-commentary">Improved up in trip landing a handicap by 5 1/2l off a 5lb lower mark at Stratford last time; effective 2 1/2-3 1/4m, acts on good; back in form, 5lb rise looks lenient. (Forecast 11/4)</div>
+  <div class="pick-chips"><span class="chip">SMALL_FIELD</span><span class="chip">LAST3_1WIN</span><span class="chip">LAST3_1TOP3</span><span class="chip">FORM_WR_LOW</span><span class="chip">BAD_JUMP_FORM</span><span class="chip">CLS_WR_ELITE</span><span class="chip">GRD_WR_ELITE</span><span class="chip">AVG3_STRONG</span><span class="chip">MAX_ELITE</span><span class="chip">CRS_SPD_OK</span><span class="chip">GRD_SPD_ELITE</span><span class="chip">TR14_ELITE</span><span class="chip">TRC_ELITE</span><span class="chip positive">JK14_ELITE</span></div>
+</div>
+
+<div class="footer">
+  Magpie Tips · Generated 2026-05-20 12:15 · Selections subject to BSP volatility
+</div>
+</body>
+</html>
