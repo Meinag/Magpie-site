@@ -5,29 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Magpie Tips — Guide</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'IBM Plex Sans',sans-serif;background:#f7f8fa;color:#15171c;line-height:1.6;padding:0 0 40px;-webkit-font-smoothing:antialiased}
-.header{background:#fff;border-bottom:1px solid #eceef1;text-align:center;padding:24px 16px}
-.header h1{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;letter-spacing:-.01em;color:#15171c}
-.header .sub{color:#646b78;font-size:13px;margin-top:4px}
-.nav{text-align:center;padding:12px;background:#fff;border-bottom:1px solid #eceef1;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.nav a{display:inline-block;color:#fff;text-decoration:none;font-weight:600;font-size:13px;padding:8px 15px;background:#15171c;border-radius:11px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#faf8f2;color:#1a1a1a;line-height:1.6;padding:0 0 40px}
+.header{background:linear-gradient(135deg,#1a1a1a,#2d2d2d);color:#fff;text-align:center;padding:24px 16px}
+.header h1{font-size:24px;color:#e8c452;letter-spacing:1px}
+.header .sub{color:#aaa;font-size:13px;margin-top:4px}
+.nav{text-align:center;padding:14px;background:#fff;border-bottom:1px solid #e5e0d5}
+.nav a{display:inline-block;margin:0 8px;color:#2d2d2d;text-decoration:none;font-weight:700;font-size:14px;padding:6px 14px;border:1px solid #c9a227;border-radius:20px}
+.nav a:hover{background:#c9a227;color:#fff}
 .wrap{max-width:680px;margin:0 auto;padding:0 16px}
-.card{background:#fff;border:1px solid #eceef1;border-radius:16px;margin:18px 0;padding:22px 20px;box-shadow:0 1px 2px rgba(20,23,33,.03)}
-.card h2{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;margin-bottom:10px;color:#15171c}
+.card{background:#fff;border:1px solid #e5e0d5;border-radius:14px;margin:20px 0;padding:22px 20px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.card h2{color:#1a1a1a;font-size:20px;margin-bottom:4px;border-bottom:2px solid #c9a227;padding-bottom:8px}
 .card h2 .emoji{margin-right:6px}
-.card h3{font-family:'Bricolage Grotesque',sans-serif;color:#15171c;font-size:16px;font-weight:700;margin:18px 0 6px}
-.card p{margin:8px 0;font-size:15px;color:#2b313b}
+.card h3{color:#2d2d2d;font-size:16px;margin:18px 0 6px}
+.card p{margin:8px 0;font-size:15px}
 .card ul{margin:8px 0 8px 20px}
-.card li{margin:6px 0;font-size:15px;color:#2b313b}
-.hl{background:#f2f4f7;border-left:3px solid #15171c;padding:10px 14px;margin:12px 0;border-radius:0 8px 8px 0;font-size:14px}
-.example{background:#eef1f6;border-radius:8px;padding:8px 12px;font-size:14px;margin:8px 0}
-.cta{text-align:center;margin:24px 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.cta a{display:inline-block;background:#15171c;color:#fff;font-weight:600;text-decoration:none;padding:11px 22px;border-radius:11px;font-size:14px}
-.cta a.tg{background:#229ED9}
-.footer{text-align:center;color:#9097a3;font-size:12px;margin-top:24px;padding:16px}
-strong{color:#15171c;font-weight:600}
+.card li{margin:6px 0;font-size:15px}
+.hl{background:#fdf6e3;border-left:3px solid #c9a227;padding:10px 14px;margin:12px 0;border-radius:0 8px 8px 0;font-size:14px}
+.example{background:#f0f4f8;border-radius:8px;padding:8px 12px;font-size:14px;margin:8px 0}
+.cta{text-align:center;margin:24px 0}
+.cta a{display:inline-block;background:#229ED9;color:#fff;font-weight:700;text-decoration:none;padding:12px 28px;border-radius:30px;margin:6px}
+.cta a.site{background:#1a1a1a;border:1px solid #c9a227}
+.footer{text-align:center;color:#999;font-size:12px;margin-top:24px;padding:16px}
+strong{color:#1a1a1a}
 </style>
 </head>
 <body>
@@ -109,7 +109,7 @@ strong{color:#15171c;font-weight:600}
 
 <div class="cta">
 <a class="site" href="index.html">📊 Today's Selections</a>
-<a class="tg" href="https://t.me/+63DUvWaAPp03M2Q8" target="_blank">Join Free on Telegram</a>
+<a href="https://t.me/+63DUvWaAPp03M2Q8" target="_blank">📢 Join Free on Telegram</a>
 </div>
 
 <div class="footer">
