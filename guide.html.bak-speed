@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magpie Tips — Guide</title><meta property="og:title" content="Magpie Tips — How It Works"><meta property="og:description" content="How the model scores and tiers every runner, the staking plan, and how to use the selections. Settled at advised price, updated daily."><meta property="og:image" content="https://magpietips.co.uk/og-image.png"><meta property="og:url" content="https://magpietips.co.uk/guide.html"><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Magpie Tips — How It Works"><meta name="twitter:description" content="How the model scores and tiers every runner. Settled at advised price, updated daily."><meta name="twitter:image" content="https://magpietips.co.uk/og-image.png">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',sans-serif;background:#f7f8fa;color:#15171c;line-height:1.6;padding:0 0 40px;-webkit-font-smoothing:antialiased}
+.header{background:#fff;border-bottom:1px solid #eceef1;text-align:center;padding:24px 16px}
+.header h1{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;letter-spacing:-.01em;color:#15171c}
+.header .sub{color:#646b78;font-size:13px;margin-top:4px}
+.nav{text-align:center;padding:12px;background:#fff;border-bottom:1px solid #eceef1;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.nav a{display:inline-block;color:#fff;text-decoration:none;font-weight:600;font-size:13px;padding:8px 15px;background:#15171c;border-radius:11px}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px}
+.card{background:#fff;border:1px solid #eceef1;border-radius:16px;margin:18px 0;padding:22px 20px;box-shadow:0 1px 2px rgba(20,23,33,.03)}
+.card h2{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;margin-bottom:10px;color:#15171c}
+.card h2 .emoji{margin-right:6px}
+.card h3{font-family:'Bricolage Grotesque',sans-serif;color:#15171c;font-size:16px;font-weight:700;margin:18px 0 6px}
+.card p{margin:8px 0;font-size:15px;color:#2b313b}
+.card ul{margin:8px 0 8px 20px}
+.card li{margin:6px 0;font-size:15px;color:#2b313b}
+.hl{background:#f2f4f7;border-left:3px solid #15171c;padding:10px 14px;margin:12px 0;border-radius:0 8px 8px 0;font-size:14px}
+.example{background:#eef1f6;border-radius:8px;padding:8px 12px;font-size:14px;margin:8px 0}
+.cta{text-align:center;margin:24px 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.cta a{display:inline-block;background:#15171c;color:#fff;font-weight:600;text-decoration:none;padding:11px 22px;border-radius:11px;font-size:14px}
+.cta a.tg{background:#229ED9}
+.footer{text-align:center;color:#9097a3;font-size:12px;margin-top:24px;padding:16px}
+strong{color:#15171c;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>🐦 MAGPIE TIPS — GUIDE</h1>
+<div class="sub">How the system works &amp; how to use the tips</div>
+</div>
+
+<div class="nav">
+<a href="index.html">← Today's Selections</a>
+<a href="#how-it-works">How It Works</a>
+<a href="#how-to-use">How To Use</a>
+</div>
+
+<div class="wrap">
+
+<div class="card" id="how-it-works">
+<h2><span class="emoji">📊</span>How It Works — Staking, P&amp;L &amp; The Website</h2>
+
+<h3>The staking plan</h3>
+<p>Every selection is <strong>1 point, level stakes</strong>. That means the same stake on every single pick — no chasing losses, no doubling up, no variable "confidence" stakes. One point, every time, win or lose.</p>
+<p>Why level stakes? Because it's the only honest way to measure if a system actually works. If a tipster varies stakes, they can hide a losing system behind a couple of big-staked winners. Level stakes can't be fudged — the profit is real or it isn't.</p>
+<div class="hl">A "point" is whatever you choose it to be. If £10 = 1 point, a +50pt week = +£500. If £2 = 1 point, it's +£100. Scale it to your own bankroll — never bet more than you're comfortable losing.</div>
+
+<h3>How the P&amp;L is calculated</h3>
+<p>Profit/loss is worked out at <strong>advised price</strong> — the official price every horse is returned at when the race goes off.</p>
+<ul>
+<li>A <strong>winner</strong> returns its advised price minus the stake.</li>
+<li>A <strong>loser</strong> loses the 1pt stake → −1 point.</li>
+</ul>
+<div class="example">Example: a horse wins at 5.0 advised → profit = 5.0 − 1 = <strong>+4 points</strong>.</div>
+<p>Each day we add up every selection: winners pay out at their advised price, losers cost 1pt each. The total is the day's P&amp;L. Add the days together = the running record.</p>
+<div class="hl"><strong>Why the advised price?</strong> Because it's independently verifiable — nobody can claim a fake price. Every result is settled at the real number the market returned. Wins AND losers are all counted — no cherry-picking the good days.</div>
+
+<h3>📈 The website gives you the full picture</h3>
+<p>The Telegram posts give you the selections. The website adds:</p>
+<ul>
+<li>The <strong>verified results panel</strong> — complete P&amp;L, strike rates and ROI, updated daily</li>
+<li>The <strong>tier ratings</strong> (Platinum / Gold / Silver / Bronze) showing how strong each selection is</li>
+<li>The <strong>spotlight commentary</strong> on each runner — the form notes and reasoning behind the race</li>
+</ul>
+<p>If you want to understand <em>why</em> a horse is fancied — the form, the going, the trip — the site has the commentary laid out race by race. The Telegram tips are the quick version; the website is the detail.</p>
+</div>
+
+<div class="card" id="how-to-use">
+<h2><span class="emoji">📖</span>How To Use The Tips</h2>
+
+<h3>Rank 1 vs Rank 2</h3>
+<p>Each race has two selections:</p>
+<ul>
+<li><strong>Rank 1</strong> = the model's strongest pick. Higher strike rate (wins more often), usually shorter odds.</li>
+<li><strong>Rank 2</strong> = the value angle. Wins less often but at bigger prices — and over time it's actually been the bigger earner.</li>
+</ul>
+<p>You can back <strong>both</strong>, or just one. Backing both per race covers more winners but costs more in stakes. Backing Rank 1 only is tighter and steadier. Your choice — the record tracks both separately so you can see how each performs.</p>
+
+<h3>Win or each-way?</h3>
+<ul>
+<li><strong>Under 5/1 (6.0):</strong> 1 point to win — at short prices the place part isn't worth much.</li>
+<li><strong>6.0 (5/1) and up:</strong> back <strong>each-way</strong> (0.5pt each-way) — you get paid if the horse just places, which cushions the longer-odds picks.</li>
+</ul>
+<p>The record follows the staking rule above — win under 6.0, each-way at 6.0 and bigger — which suits the longer-priced Rank 2 value picks especially.</p>
+
+<h3>Staking — keep it simple</h3>
+<ul>
+<li><strong>Under 5/1 (6.0): 1pt win. 6.0+: 0.5pt each-way.</strong> Same rule every time.</li>
+<li><strong>Set your point size to your bankroll.</strong> A common rule: 1 point = 1–2% of your total betting bank. So a £200 bank → £2–£4 a point. That way a losing run never wipes you out.</li>
+<li><strong>Never chase.</strong> Losing days happen — even a profitable system has them. Flat stakes through the downswings is how the edge plays out.</li>
+<li><strong>Only bet what you can afford to lose.</strong> This is entertainment with an edge, not income.</li>
+</ul>
+
+<h3>Timing your bets</h3>
+<p><strong>Back every selection at advised price.</strong> Take the advised price shown, ideally the night before or early — that is the price our record settles at.</p>
+<p>The prices shown in each post are a <strong>current-market guide only</strong>. Prices drift and steam through the day, so the morning figure is rarely the final one. The advised price is the real, takeable price — and it's exactly what our record settles at. Grabbing the advised price early is the point - you beat the closing market.</p>
+
+<h3>Judge it over weeks, not days</h3>
+<div class="hl">One day means little — good or bad. The edge shows over a proper sample. Follow the running record on the site and judge the system over weeks. That's how value betting works.</div>
+</div>
+
+<div class="cta">
+<a class="site" href="index.html">📊 Today's Selections</a>
+<a class="tg" href="https://t.me/+63DUvWaAPp03M2Q8" target="_blank">Join Free on Telegram</a>
+</div>
+
+<div class="footer">
+Magpie Tips · 18+ · bet responsibly · never bet what you can't afford to lose<br>
+Results are a record, not a promise of future profit.
+</div>
+
+</div>
+<div id="rg-footer" style="text-align:center;font-size:12px;color:#6b7280;padding:18px 12px 26px;line-height:1.5;font-family:inherit">18+ only. Please gamble responsibly. For free, confidential support visit <a href="https://www.begambleaware.org" target="_blank" rel="noopener" style="color:#6b7280">BeGambleAware.org</a> or call the National Gambling Helpline on 0808 8020 133.</div>
+</body>
+</html>
